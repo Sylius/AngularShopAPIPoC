@@ -24,9 +24,9 @@ import { CheckoutCompleteRequest } from '../models/checkout-complete-request';
 class CheckoutService extends __BaseService {
   static readonly checkoutSummarizePath = '/checkout/{token}';
   static readonly checkoutAddressPath = '/checkout/{token}/address';
-  static readonly checkoutShowAvailableShippingMethodsPath = '/checkout/{token}/shipping';
+  static readonly checkoutShowAvailableShippingMethodsPath = '/checkout/{token}/shipping/';
   static readonly checkoutChooseShippingMethodPath = '/checkout/{token}/shipping/{id}';
-  static readonly checkoutShowAvailablePaymentMethodsPath = '/checkout/{token}/payment';
+  static readonly checkoutShowAvailablePaymentMethodsPath = '/checkout/{token}/payment/';
   static readonly checkoutChoosePaymentMethodPath = '/checkout/{token}/payment/{id}';
   static readonly checkoutCompletePath = '/checkout/{token}/complete';
 
@@ -79,16 +79,16 @@ class CheckoutService extends __BaseService {
    * This endpoint will allow you to add billing and shipping addresses to the cart and begin the checkout process. You can either define the same shipping and billing address or specify them separately.
    * @param params The `CheckoutService.CheckoutAddressParams` containing the following parameters:
    *
-   * - `content`:
-   *
    * - `token`: Cart identifier.
+   *
+   * - `content`:
    */
   checkoutAddressResponse(params: CheckoutService.CheckoutAddressParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __body = params.content;
 
+    __body = params.content;
     let req = new HttpRequest<any>(
       'PUT',
       this.rootUrl + `/checkout/${params.token}/address`,
@@ -110,9 +110,9 @@ class CheckoutService extends __BaseService {
    * This endpoint will allow you to add billing and shipping addresses to the cart and begin the checkout process. You can either define the same shipping and billing address or specify them separately.
    * @param params The `CheckoutService.CheckoutAddressParams` containing the following parameters:
    *
-   * - `content`:
-   *
    * - `token`: Cart identifier.
+   *
+   * - `content`:
    */
   checkoutAddress(params: CheckoutService.CheckoutAddressParams): __Observable<null> {
     return this.checkoutAddressResponse(params).pipe(
@@ -123,7 +123,7 @@ class CheckoutService extends __BaseService {
   /**
    * This endpoint will show you available shipping methods for all cart shipments.
    * @param token Cart identifier.
-   * @return Get available shipping methods.
+   * @return Shipping methods returned
    */
   checkoutShowAvailableShippingMethodsResponse(token: string): __Observable<__StrictHttpResponse<AvailableShippingMethods>> {
     let __params = this.newParams();
@@ -132,7 +132,7 @@ class CheckoutService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/checkout/${token}/shipping`,
+      this.rootUrl + `/checkout/${token}/shipping/`,
       __body,
       {
         headers: __headers,
@@ -150,7 +150,7 @@ class CheckoutService extends __BaseService {
   /**
    * This endpoint will show you available shipping methods for all cart shipments.
    * @param token Cart identifier.
-   * @return Get available shipping methods.
+   * @return Shipping methods returned
    */
   checkoutShowAvailableShippingMethods(token: string): __Observable<AvailableShippingMethods> {
     return this.checkoutShowAvailableShippingMethodsResponse(token).pipe(
@@ -162,19 +162,19 @@ class CheckoutService extends __BaseService {
    * This endpoint will allow you to choose a cart shipping method.
    * @param params The `CheckoutService.CheckoutChooseShippingMethodParams` containing the following parameters:
    *
+   * - `token`: Cart identifier.
+   *
    * - `id`: Order number of shipment for which shipping method should be specified.
    *
    * - `content`:
-   *
-   * - `token`: Cart identifier.
    */
   checkoutChooseShippingMethodResponse(params: CheckoutService.CheckoutChooseShippingMethodParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    __body = params.content;
 
+    __body = params.content;
     let req = new HttpRequest<any>(
       'PUT',
       this.rootUrl + `/checkout/${params.token}/shipping/${params.id}`,
@@ -196,11 +196,11 @@ class CheckoutService extends __BaseService {
    * This endpoint will allow you to choose a cart shipping method.
    * @param params The `CheckoutService.CheckoutChooseShippingMethodParams` containing the following parameters:
    *
+   * - `token`: Cart identifier.
+   *
    * - `id`: Order number of shipment for which shipping method should be specified.
    *
    * - `content`:
-   *
-   * - `token`: Cart identifier.
    */
   checkoutChooseShippingMethod(params: CheckoutService.CheckoutChooseShippingMethodParams): __Observable<null> {
     return this.checkoutChooseShippingMethodResponse(params).pipe(
@@ -211,7 +211,7 @@ class CheckoutService extends __BaseService {
   /**
    * This endpoint will show you available payment methods for all cart payments.
    * @param token Cart identifier.
-   * @return Get available payment methods.
+   * @return Payment methods returned
    */
   checkoutShowAvailablePaymentMethodsResponse(token: string): __Observable<__StrictHttpResponse<AvailablePaymentMethods>> {
     let __params = this.newParams();
@@ -220,7 +220,7 @@ class CheckoutService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/checkout/${token}/payment`,
+      this.rootUrl + `/checkout/${token}/payment/`,
       __body,
       {
         headers: __headers,
@@ -238,7 +238,7 @@ class CheckoutService extends __BaseService {
   /**
    * This endpoint will show you available payment methods for all cart payments.
    * @param token Cart identifier.
-   * @return Get available payment methods.
+   * @return Payment methods returned
    */
   checkoutShowAvailablePaymentMethods(token: string): __Observable<AvailablePaymentMethods> {
     return this.checkoutShowAvailablePaymentMethodsResponse(token).pipe(
@@ -250,19 +250,19 @@ class CheckoutService extends __BaseService {
    * This endpoint will allow you to choose cart a payment method.
    * @param params The `CheckoutService.CheckoutChoosePaymentMethodParams` containing the following parameters:
    *
+   * - `token`: Cart identifier.
+   *
    * - `id`: Order number of payment for which payment method should be specified.
    *
    * - `content`:
-   *
-   * - `token`: Cart identifier.
    */
   checkoutChoosePaymentMethodResponse(params: CheckoutService.CheckoutChoosePaymentMethodParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    __body = params.content;
 
+    __body = params.content;
     let req = new HttpRequest<any>(
       'PUT',
       this.rootUrl + `/checkout/${params.token}/payment/${params.id}`,
@@ -284,11 +284,11 @@ class CheckoutService extends __BaseService {
    * This endpoint will allow you to choose cart a payment method.
    * @param params The `CheckoutService.CheckoutChoosePaymentMethodParams` containing the following parameters:
    *
+   * - `token`: Cart identifier.
+   *
    * - `id`: Order number of payment for which payment method should be specified.
    *
    * - `content`:
-   *
-   * - `token`: Cart identifier.
    */
   checkoutChoosePaymentMethod(params: CheckoutService.CheckoutChoosePaymentMethodParams): __Observable<null> {
     return this.checkoutChoosePaymentMethodResponse(params).pipe(
@@ -300,16 +300,16 @@ class CheckoutService extends __BaseService {
    * This endpoint will allow you to complete the checkout.
    * @param params The `CheckoutService.CheckoutCompleteParams` containing the following parameters:
    *
-   * - `content`:
-   *
    * - `token`: Cart identifier.
+   *
+   * - `content`:
    */
   checkoutCompleteResponse(params: CheckoutService.CheckoutCompleteParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __body = params.content;
 
+    __body = params.content;
     let req = new HttpRequest<any>(
       'PUT',
       this.rootUrl + `/checkout/${params.token}/complete`,
@@ -331,9 +331,9 @@ class CheckoutService extends __BaseService {
    * This endpoint will allow you to complete the checkout.
    * @param params The `CheckoutService.CheckoutCompleteParams` containing the following parameters:
    *
-   * - `content`:
-   *
    * - `token`: Cart identifier.
+   *
+   * - `content`:
    */
   checkoutComplete(params: CheckoutService.CheckoutCompleteParams): __Observable<null> {
     return this.checkoutCompleteResponse(params).pipe(
@@ -348,12 +348,12 @@ module CheckoutService {
    * Parameters for checkoutAddress
    */
   export interface CheckoutAddressParams {
-    content: CheckoutAddressRequest;
 
     /**
      * Cart identifier.
      */
     token: string;
+    content: CheckoutAddressRequest;
   }
 
   /**
@@ -362,15 +362,15 @@ module CheckoutService {
   export interface CheckoutChooseShippingMethodParams {
 
     /**
+     * Cart identifier.
+     */
+    token: string;
+
+    /**
      * Order number of shipment for which shipping method should be specified.
      */
     id: string;
     content: CheckoutChooseShippingMethodRequest;
-
-    /**
-     * Cart identifier.
-     */
-    token: string;
   }
 
   /**
@@ -379,27 +379,27 @@ module CheckoutService {
   export interface CheckoutChoosePaymentMethodParams {
 
     /**
+     * Cart identifier.
+     */
+    token: string;
+
+    /**
      * Order number of payment for which payment method should be specified.
      */
     id: string;
     content: CheckoutChoosePaymentMethodRequest;
-
-    /**
-     * Cart identifier.
-     */
-    token: string;
   }
 
   /**
    * Parameters for checkoutComplete
    */
   export interface CheckoutCompleteParams {
-    content: CheckoutCompleteRequest;
 
     /**
      * Cart identifier.
      */
     token: string;
+    content: CheckoutCompleteRequest;
   }
 }
 

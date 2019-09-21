@@ -1,1 +1,5 @@
 <p>login works!</p>
+<input #username>
+<input #password>
+
+<button (click)="login(username.value, password.value)">Login</button>

@@ -8,6 +8,9 @@ import { UsersService } from '../api/services';
 })
 export class LoginComponent implements OnInit {
 
+  username: string;
+  password: string;
+
   constructor(
     private usersService: UsersService,
   ) { }
@@ -16,13 +19,13 @@ export class LoginComponent implements OnInit {
   }
 
   login(userName: string, password: string) {
-    this.usersService.loginUser({
-      email: userName,
-      password
-    }).subscribe(
-      (result) => {
-        console.log(result);
-      }
-    );
+    // this.usersService.loginUser({
+    //   email: userName,
+    //   password
+    // }).subscribe(
+    //   (result) => {
+    //     console.log(result);
+    //   }
+    // );
   }
 }

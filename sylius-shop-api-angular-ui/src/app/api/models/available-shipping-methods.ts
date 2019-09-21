@@ -1,9 +1,9 @@
 /* tslint:disable */
-import { ShippingMethod } from './shipping-method';
+import { AvailableShippingMethods_shipments } from './available-shipping-methods-_shipments';
 
 /**
  * Available shipping methods for each shipment.
  */
 export interface AvailableShippingMethods {
-  shipments?: Array<{methods?: {[key: string]: ShippingMethod}}>;
+  shipments?: Array<AvailableShippingMethods_shipments>;
 }

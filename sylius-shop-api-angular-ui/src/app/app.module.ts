@@ -19,7 +19,7 @@ import { ApiModule } from './api/api.module';
   ],
   imports: [
     BrowserModule,
-    ApiModule.forRoot({rootUrl: 'http://localhost:80/shop-api'}),
+    ApiModule.forRoot({rootUrl: '/shop-api'}),
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule

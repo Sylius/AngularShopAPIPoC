@@ -1,9 +1,9 @@
 /* tslint:disable */
-import { PaymentMethod } from './payment-method';
+import { AvailablePaymentMethods_payments } from './available-payment-methods-_payments';
 
 /**
  * Available payment methods for each payment.
  */
 export interface AvailablePaymentMethods {
-  payments?: Array<{methods?: {[key: string]: PaymentMethod}}>;
+  payments?: Array<AvailablePaymentMethods_payments>;
 }

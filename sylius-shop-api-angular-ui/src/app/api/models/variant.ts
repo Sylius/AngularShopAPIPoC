@@ -18,8 +18,6 @@ export interface Variant {
    * Map of keys from previous field to translated values of given variant.
    */
   nameAxis?: {[key: string]: string};
-  onHand?: number;
   price?: Price;
-  originalPrice?: Price;
   images?: Array<Image>;
 }

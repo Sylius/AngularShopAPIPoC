@@ -1,10 +1,10 @@
 /* tslint:disable */
 import { TotalsView } from './totals-view';
-import { Item } from './item';
+import { CartItem } from './cart-item';
 import { Address } from './address';
 import { Payment } from './payment';
 import { Shipment } from './shipment';
-import { Discount } from './discount';
+import { Cart_cartDiscounts } from './cart-_cart-discounts';
 
 /**
  * Cart with information about items, current state, totals and more.
@@ -27,16 +27,11 @@ export interface Cart {
    * Current state of a checkout.
    */
   checkoutState?: 'cart' | 'addressed' | 'shipping_selected' | 'payment_selected' | 'completed';
-  items?: Array<Item>;
+  items?: Array<CartItem>;
   channel?: string;
   shippingAddress?: Address;
   billingAddress?: Address;
   payments?: Array<Payment>;
   shipments?: Array<Shipment>;
-  cartDiscounts?: Array<{[key: string]: Discount}>;
-
-  /**
-   * Code of the coupon that is associated with this cart
-   */
-  couponCode?: string;
+  cartDiscounts?: Array<Cart_cartDiscounts>;
 }

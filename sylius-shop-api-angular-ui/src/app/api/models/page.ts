@@ -1,4 +1,5 @@
 /* tslint:disable */
+import { Page__links } from './page-__links';
 
 /**
  * Generic page object.
@@ -18,11 +19,11 @@ export interface Page {
   /**
    * Number of available pages for given limit.
    */
-  pages?: number;
+  pages?: {};
 
   /**
    * Amount of all paginated resources.
    */
-  total?: number;
-  _links?: {self?: string, first?: string, last?: string, next?: string};
+  total?: {};
+  _links?: Page__links;
 }
