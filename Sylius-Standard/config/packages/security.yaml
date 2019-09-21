@@ -1,7 +1,8 @@
 parameters:
     sylius.security.admin_regex: "^/admin"
     sylius.security.api_regex: "^/api"
-    sylius.security.shop_regex: "^/(?!admin|api/.*|api$|media/.*)[^/]++"
+    sylius.security.shop_regex: "^/(?!admin|api/.*|api$|shop-api|media/.*)[^/]++"
+    sylius_shop_api.security.regex: "^/shop-api"
 
 security:
     always_authenticate_before_granting: true
@@ -13,6 +14,20 @@ security:
     encoders:
         Sylius\Component\User\Model\UserInterface: argon2i
     firewalls:
+        sylius_shop_api:
+            pattern: "%sylius_shop_api.security.regex%"
+            stateless: true
+            anonymous: true
+            provider: sylius_shop_user_provider
+            json_login:
+                check_path: /shop-api/login
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
         admin:
             switch_user: true
             context: admin

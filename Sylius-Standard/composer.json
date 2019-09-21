@@ -18,6 +18,7 @@
     ],
     "require": {
         "php": "^7.2",
+        "sylius/shop-api-plugin": "^1.0@RC",
         "sylius/sylius": "~1.7.0@dev",
         "symfony/dotenv": "^4.3",
         "symfony/flex": "^1.2"
