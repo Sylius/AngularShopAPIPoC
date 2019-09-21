@@ -8,7 +8,7 @@ info:
     license:
         name: "MIT"
         url: "https://opensource.org/licenses/MIT"
-host: "demo.sylius.com"
+host: "api.demo.sylius.com"
 basePath: "/shop-api"
 consumes:
     - "application/json"
@@ -629,7 +629,7 @@ paths:
                     schema:
                         $ref: "#/definitions/ProductReviewsPage"
 
-    /product-latest:
+    /product-latest/:
         get:
             tags:
                 - "products"

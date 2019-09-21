@@ -21,8 +21,8 @@ export class ProductsComponent implements OnInit {
   ngOnInit() {
 
     this.products = this.productService.latestProducts({
-      limit: 100,
-      locale: 'de'
+      // limit: 100,
+      // locale: 'de'
     });
   }
 }

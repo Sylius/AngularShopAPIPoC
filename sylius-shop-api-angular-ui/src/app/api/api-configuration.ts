@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ApiConfiguration {
-  rootUrl: string = 'https://demo.sylius.com/shop-api';
+  rootUrl: string = 'https://api.demo.sylius.com/shop-api';
 }
 
 export interface ApiConfigurationInterface {

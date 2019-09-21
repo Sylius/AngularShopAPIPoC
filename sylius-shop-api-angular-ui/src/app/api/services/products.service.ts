@@ -28,7 +28,7 @@ class ProductsService extends __BaseService {
   static readonly productReviewsBySlugPath = '/products/by-slug/{slug}/reviews';
   static readonly productAddReviewPath = '/products/by-code/{code}/reviews';
   static readonly productReviewsPath = '/products/by-code/{code}/reviews';
-  static readonly latestProductsPath = '/product-latest';
+  static readonly latestProductsPath = '/product-latest/';
 
   constructor(
     config: __Configuration,
@@ -437,7 +437,7 @@ class ProductsService extends __BaseService {
     if (params.limit != null) __params = __params.set('limit', params.limit.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/product-latest`,
+      this.rootUrl + `/product-latest/`,
       __body,
       {
         headers: __headers,
