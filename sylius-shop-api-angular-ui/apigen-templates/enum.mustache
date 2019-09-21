@@ -1,0 +1,30 @@
+import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+
+{{{modelComments}}}type {{modelClass}} = {{#modelEnumValues}}
+  '{{{enumValue}}}'{{^enumIsLast}} |{{/enumIsLast}}{{/modelEnumValues}};
+{{#enumModule}}
+module {{modelClass}} {
+{{#modelEnumValues}}  export const {{enumName}}: {{modelClass}} = '{{{enumValue}}}';
+_('{{modelClass}}.{{{enumValue}}}');
+{{/modelEnumValues}}
+  export function values(): {{modelClass}}[] {
+    return [
+{{#modelEnumValues}}      {{enumName}}{{^enumIsLast}}, {{/enumIsLast}}
+{{/modelEnumValues}}
+    ];
+  }
+  export function getValue(name: string): {{modelClass}} {
+    const enumValue = {{modelClass}}[name];
+    if (enumValue) {
+      return enumValue;
+    } else {
+      throw new Error(`EnumValue ${name} not existing on type {{modelClass}}`);
+    }
+  }
+  export function getEnumName(): string {
+    return '{{modelClass}}';
+  }
+}
+{{/enumModule}}
+
+export { {{modelClass}} }

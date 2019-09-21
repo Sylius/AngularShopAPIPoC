@@ -1,0 +1,16 @@
+/* tslint:disable */
+import { Injectable } from '@angular/core';
+
+/**
+ * Global configuration for {{prefix}} services
+ */
+@Injectable({
+  providedIn: 'root',
+})
+export class {{configurationClass}} {
+  rootUrl: string = '{{{rootUrl}}}';
+}
+
+export interface {{configurationInterface}} {
+  rootUrl?: string;
+}

@@ -1,0 +1,37 @@
+/* tslint:disable */
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { BaseService as __BaseService } from '../base-service';
+import { {{ configurationClass }} as __Configuration } from '../{{configurationFile}}';
+import { StrictHttpResponse as __StrictHttpResponse } from '../strict-http-response';
+import { Observable as __Observable } from 'rxjs';
+import { map as __map, filter as __filter } from 'rxjs/operators';
+
+{{#serviceDependencies}}import { {{modelClass}} } from '../models/{{modelFile}}';
+{{/serviceDependencies}}
+{{{serviceComments}}}@Injectable({
+  providedIn: 'root',
+})
+class {{serviceClass}} extends __BaseService {
+{{#serviceOperations}}{{>operationEndpoints}}{{/serviceOperations}}
+
+  constructor(
+    config: __Configuration,
+    http: HttpClient
+  ) {
+    super(config, http);
+  }
+{{#serviceOperations}}{{>operationResponse}}{{>operationBody}}{{/serviceOperations}}
+}
+
+module {{serviceClass}} {
+{{#serviceOperations}}{{#operationParamsClass}}
+{{{operationParamsClassComments}}}export interface {{operationParamsClass}} {
+{{#operationParameters}}
+{{{paramComments}}}{{paramVar}}{{^paramRequired}}?{{/paramRequired}}: {{{paramType}}};
+{{/operationParameters}}
+  }
+{{/operationParamsClass}}{{/serviceOperations}}
+}
+
+export { {{serviceClass}} }
