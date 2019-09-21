@@ -2,13 +2,13 @@
   "name": "sylius-shop-api-angular-ui",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "api:gen":" ng-swagger-gen -c ./ng-swagger-gen.json"
+    "api:gen":" ng-swagger-gen -c ./ng-swagger-gen.json",
+    "ng": "ng"
   },
   "private": true,
   "dependencies": {
