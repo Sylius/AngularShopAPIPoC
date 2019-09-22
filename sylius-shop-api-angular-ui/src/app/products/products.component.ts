@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Product, ProductsPage } from '../api/models';
-import { ProductsService } from '../api/services';
+import { Product, ProductsPage, Taxon } from '../api/models';
+import { ProductsService, TaxonsService } from '../api/services';
 
 @Component({
   selector: 'app-products',
@@ -10,19 +10,21 @@ import { ProductsService } from '../api/services';
 })
 export class ProductsComponent implements OnInit {
 
-  products: Observable<ProductsPage>;
+  taxons: Observable<Taxon[]>;
 
 
   constructor(
     private productService: ProductsService,
+    private taxonsService: TaxonsService,
   ) {
   }
 
   ngOnInit() {
 
-    this.products = this.productService.productCatalogTaxonBySlug({
-      channel: 'FASHION_WEB',
-      slug: 't-shirts/men'
-    });
+    this.taxons = this.taxonsService.taxonTree();
+    // this.products = this.productService.prodo({
+    //   channel: 'FASHION_WEB',
+    //   slug: 't-shirts/men'
+    // });
   }
 }

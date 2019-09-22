@@ -8,7 +8,10 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { RequestPasswordResetting } from '../models/request-password-resetting';
+import { PasswordResetRequest } from '../models/password-reset-request';
 import { RegisterRequest } from '../models/register-request';
+import { LoginSuccess } from '../models/login-success';
+import { LoginRequest } from '../models/login-request';
 import { LoggedInCustomerDetails } from '../models/logged-in-customer-details';
 import { UpdateUserRequest } from '../models/update-user-request';
 
@@ -20,7 +23,9 @@ import { UpdateUserRequest } from '../models/update-user-request';
 })
 class UsersService extends __BaseService {
   static readonly requestPasswordResetPath = '/request-password-reset';
+  static readonly passwordResetPath = '/password-reset/{token}';
   static readonly registerUserPath = '/register';
+  static readonly loginUserPath = '/login';
   static readonly mePath = '/me';
   static readonly updateUserPath = '/me';
 
@@ -33,13 +38,13 @@ class UsersService extends __BaseService {
 
   /**
    * Email with reset password path will be sent to user. Default path for password resetting is `/password-reset/{token}`. To change it, you need to override template `@SyliusShopApi\Email\passwordReset.html.twig`.
-   * @param email Email of user which want to reset password.
+   * @param content undefined
    */
-  requestPasswordResetResponse(email: RequestPasswordResetting): __Observable<__StrictHttpResponse<null>> {
+  requestPasswordResetResponse(content: RequestPasswordResetting): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __body = email;
+    __body = content;
     let req = new HttpRequest<any>(
       'PUT',
       this.rootUrl + `/request-password-reset`,
@@ -59,10 +64,55 @@ class UsersService extends __BaseService {
   }
   /**
    * Email with reset password path will be sent to user. Default path for password resetting is `/password-reset/{token}`. To change it, you need to override template `@SyliusShopApi\Email\passwordReset.html.twig`.
-   * @param email Email of user which want to reset password.
+   * @param content undefined
    */
-  requestPasswordReset(email: RequestPasswordResetting): __Observable<null> {
-    return this.requestPasswordResetResponse(email).pipe(
+  requestPasswordReset(content: RequestPasswordResetting): __Observable<null> {
+    return this.requestPasswordResetResponse(content).pipe(
+      __map(_r => _r.body as null)
+    );
+  }
+
+  /**
+   * This endpoint resets the user password.
+   * @param params The `UsersService.PasswordResetParams` containing the following parameters:
+   *
+   * - `token`: Password reset token.
+   *
+   * - `content`:
+   */
+  passwordResetResponse(params: UsersService.PasswordResetParams): __Observable<__StrictHttpResponse<null>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+
+    __body = params.content;
+    let req = new HttpRequest<any>(
+      'PUT',
+      this.rootUrl + `/password-reset/${params.token}`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+  /**
+   * This endpoint resets the user password.
+   * @param params The `UsersService.PasswordResetParams` containing the following parameters:
+   *
+   * - `token`: Password reset token.
+   *
+   * - `content`:
+   */
+  passwordReset(params: UsersService.PasswordResetParams): __Observable<null> {
+    return this.passwordResetResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -104,7 +154,45 @@ class UsersService extends __BaseService {
   }
 
   /**
-   * @return Customer details returned.
+   * This route is needed to log the user in and get an access token.
+   * @param content undefined
+   * @return User was logged in
+   */
+  loginUserResponse(content: LoginRequest): __Observable<__StrictHttpResponse<LoginSuccess>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = content;
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/login`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<LoginSuccess>;
+      })
+    );
+  }
+  /**
+   * This route is needed to log the user in and get an access token.
+   * @param content undefined
+   * @return User was logged in
+   */
+  loginUser(content: LoginRequest): __Observable<LoginSuccess> {
+    return this.loginUserResponse(content).pipe(
+      __map(_r => _r.body as LoginSuccess)
+    );
+  }
+
+  /**
+   * @return Provides currently logged in user details.
    */
   meResponse(): __Observable<__StrictHttpResponse<LoggedInCustomerDetails>> {
     let __params = this.newParams();
@@ -128,7 +216,7 @@ class UsersService extends __BaseService {
     );
   }
   /**
-   * @return Customer details returned.
+   * @return Provides currently logged in user details.
    */
   me(): __Observable<LoggedInCustomerDetails> {
     return this.meResponse().pipe(
@@ -174,6 +262,18 @@ class UsersService extends __BaseService {
 }
 
 module UsersService {
+
+  /**
+   * Parameters for passwordReset
+   */
+  export interface PasswordResetParams {
+
+    /**
+     * Password reset token.
+     */
+    token: string;
+    content: PasswordResetRequest;
+  }
 }
 
 export { UsersService }
