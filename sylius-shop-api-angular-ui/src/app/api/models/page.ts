@@ -19,11 +19,11 @@ export interface Page {
   /**
    * Number of available pages for given limit.
    */
-  pages?: {};
+  pages?: number;
 
   /**
    * Amount of all paginated resources.
    */
-  total?: {};
+  total?: number;
   _links?: Page__links;
 }

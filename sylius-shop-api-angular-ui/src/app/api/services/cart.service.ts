@@ -7,7 +7,6 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../strict-http-respo
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
-import { PickupCartRequest } from '../models/pickup-cart-request';
 import { Cart } from '../models/cart';
 import { PutItemToCartRequest } from '../models/put-item-to-cart-request';
 import { PutItemsToCartRequest } from '../models/put-items-to-cart-request';
@@ -24,12 +23,11 @@ import { AddCouponRequest } from '../models/add-coupon-request';
 class CartService extends __BaseService {
   static readonly cartPickUpPath = '/carts';
   static readonly cartSummarizePath = '/carts/{token}';
-  static readonly deprecatedCartPickUpPath = '/carts/{token}';
   static readonly cartDropPath = '/carts/{token}';
-  static readonly cartPostItemPath = '/carts/{token}/items';
+  static readonly cartAddItemPath = '/carts/{token}/items';
   static readonly cartPutItemsPath = '/carts/{token}/multiple-items';
-  static readonly cartPutItemPath = '/carts/{token}/items/{identifier}';
-  static readonly cartDeleteItemsPath = '/carts/{token}/items/{identifier}';
+  static readonly cartUpdateItemPath = '/carts/{token}/items/{identifier}';
+  static readonly cartDeleteItemPath = '/carts/{token}/items/{identifier}';
   static readonly estimateShippingCostPath = '/carts/{token}/estimated-shipping-cost';
   static readonly cartAddCouponPath = '/carts/{token}/coupon';
   static readonly cartRemoveCouponPath = '/carts/{token}/coupon';
@@ -43,13 +41,12 @@ class CartService extends __BaseService {
 
   /**
    * This endpoint will allow you to create a new cart.
-   * @param content Contains an information about the channel which should be associated with the newly created cart
+   * @return Cart has been picked up
    */
-  cartPickUpResponse(content: PickupCartRequest): __Observable<__StrictHttpResponse<null>> {
+  cartPickUpResponse(): __Observable<__StrictHttpResponse<Cart>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    __body = content;
     let req = new HttpRequest<any>(
       'POST',
       this.rootUrl + `/carts`,
@@ -63,17 +60,17 @@ class CartService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
+        return _r as __StrictHttpResponse<Cart>;
       })
     );
   }
   /**
    * This endpoint will allow you to create a new cart.
-   * @param content Contains an information about the channel which should be associated with the newly created cart
+   * @return Cart has been picked up
    */
-  cartPickUp(content: PickupCartRequest): __Observable<null> {
-    return this.cartPickUpResponse(content).pipe(
-      __map(_r => _r.body as null)
+  cartPickUp(): __Observable<Cart> {
+    return this.cartPickUpResponse().pipe(
+      __map(_r => _r.body as Cart)
     );
   }
 
@@ -116,51 +113,6 @@ class CartService extends __BaseService {
   }
 
   /**
-   * This endpoint will allow you to assign a new cart to the provided token. We recommend using UUID as a token to avoid duplication. If any of previous carts or orders already have the same token value an exception will be thrown.
-   * @param params The `CartService.DeprecatedCartPickUpParams` containing the following parameters:
-   *
-   * - `token`: Cart identifier.
-   *
-   * - `content`: Contains an information about the channel which should be associated with the newly created cart
-   */
-  deprecatedCartPickUpResponse(params: CartService.DeprecatedCartPickUpParams): __Observable<__StrictHttpResponse<null>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-
-    __body = params.content;
-    let req = new HttpRequest<any>(
-      'POST',
-      this.rootUrl + `/carts/${params.token}`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'json'
-      });
-
-    return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
-      })
-    );
-  }
-  /**
-   * This endpoint will allow you to assign a new cart to the provided token. We recommend using UUID as a token to avoid duplication. If any of previous carts or orders already have the same token value an exception will be thrown.
-   * @param params The `CartService.DeprecatedCartPickUpParams` containing the following parameters:
-   *
-   * - `token`: Cart identifier.
-   *
-   * - `content`: Contains an information about the channel which should be associated with the newly created cart
-   */
-  deprecatedCartPickUp(params: CartService.DeprecatedCartPickUpParams): __Observable<null> {
-    return this.deprecatedCartPickUpResponse(params).pipe(
-      __map(_r => _r.body as null)
-    );
-  }
-
-  /**
    * This endpoint will remove the cart and all of the related cart items.
    * @param token Cart identifier.
    */
@@ -198,7 +150,7 @@ class CartService extends __BaseService {
 
   /**
    * This endpoint will allow you to add a new item to your cart.
-   * @param params The `CartService.CartPostItemParams` containing the following parameters:
+   * @param params The `CartService.CartAddItemParams` containing the following parameters:
    *
    * - `token`: Cart identifier.
    *
@@ -206,7 +158,7 @@ class CartService extends __BaseService {
    *
    * @return Item has been added to the cart
    */
-  cartPostItemResponse(params: CartService.CartPostItemParams): __Observable<__StrictHttpResponse<Cart>> {
+  cartAddItemResponse(params: CartService.CartAddItemParams): __Observable<__StrictHttpResponse<Cart>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -231,7 +183,7 @@ class CartService extends __BaseService {
   }
   /**
    * This endpoint will allow you to add a new item to your cart.
-   * @param params The `CartService.CartPostItemParams` containing the following parameters:
+   * @param params The `CartService.CartAddItemParams` containing the following parameters:
    *
    * - `token`: Cart identifier.
    *
@@ -239,8 +191,8 @@ class CartService extends __BaseService {
    *
    * @return Item has been added to the cart
    */
-  cartPostItem(params: CartService.CartPostItemParams): __Observable<Cart> {
-    return this.cartPostItemResponse(params).pipe(
+  cartAddItem(params: CartService.CartAddItemParams): __Observable<Cart> {
+    return this.cartAddItemResponse(params).pipe(
       __map(_r => _r.body as Cart)
     );
   }
@@ -295,7 +247,7 @@ class CartService extends __BaseService {
   }
 
   /**
-   * @param params The `CartService.CartPutItemParams` containing the following parameters:
+   * @param params The `CartService.CartUpdateItemParams` containing the following parameters:
    *
    * - `token`: Cart identifier.
    *
@@ -303,7 +255,7 @@ class CartService extends __BaseService {
    *
    * - `content`:
    */
-  cartPutItemResponse(params: CartService.CartPutItemParams): __Observable<__StrictHttpResponse<null>> {
+  cartUpdateItemResponse(params: CartService.CartUpdateItemParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -328,7 +280,7 @@ class CartService extends __BaseService {
     );
   }
   /**
-   * @param params The `CartService.CartPutItemParams` containing the following parameters:
+   * @param params The `CartService.CartUpdateItemParams` containing the following parameters:
    *
    * - `token`: Cart identifier.
    *
@@ -336,21 +288,21 @@ class CartService extends __BaseService {
    *
    * - `content`:
    */
-  cartPutItem(params: CartService.CartPutItemParams): __Observable<null> {
-    return this.cartPutItemResponse(params).pipe(
+  cartUpdateItem(params: CartService.CartUpdateItemParams): __Observable<null> {
+    return this.cartUpdateItemResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
 
   /**
    * This endpoint will remove one item from your cart
-   * @param params The `CartService.CartDeleteItemsParams` containing the following parameters:
+   * @param params The `CartService.CartDeleteItemParams` containing the following parameters:
    *
    * - `token`: Cart identifier.
    *
    * - `identifier`: Identifier of a specific item. Can be found in the cart summary.
    */
-  cartDeleteItemsResponse(params: CartService.CartDeleteItemsParams): __Observable<__StrictHttpResponse<null>> {
+  cartDeleteItemResponse(params: CartService.CartDeleteItemParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -375,14 +327,14 @@ class CartService extends __BaseService {
   }
   /**
    * This endpoint will remove one item from your cart
-   * @param params The `CartService.CartDeleteItemsParams` containing the following parameters:
+   * @param params The `CartService.CartDeleteItemParams` containing the following parameters:
    *
    * - `token`: Cart identifier.
    *
    * - `identifier`: Identifier of a specific item. Can be found in the cart summary.
    */
-  cartDeleteItems(params: CartService.CartDeleteItemsParams): __Observable<null> {
-    return this.cartDeleteItemsResponse(params).pipe(
+  cartDeleteItem(params: CartService.CartDeleteItemParams): __Observable<null> {
+    return this.cartDeleteItemResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
@@ -390,7 +342,7 @@ class CartService extends __BaseService {
   /**
    * @param params The `CartService.EstimateShippingCostParams` containing the following parameters:
    *
-   * - `token`: Cart identifier
+   * - `token`: Cart identifier.
    *
    * - `countryCode`: Shipping Country
    *
@@ -425,7 +377,7 @@ class CartService extends __BaseService {
   /**
    * @param params The `CartService.EstimateShippingCostParams` containing the following parameters:
    *
-   * - `token`: Cart identifier
+   * - `token`: Cart identifier.
    *
    * - `countryCode`: Shipping Country
    *
@@ -524,25 +476,9 @@ class CartService extends __BaseService {
 module CartService {
 
   /**
-   * Parameters for deprecatedCartPickUp
+   * Parameters for cartAddItem
    */
-  export interface DeprecatedCartPickUpParams {
-
-    /**
-     * Cart identifier.
-     */
-    token: string;
-
-    /**
-     * Contains an information about the channel which should be associated with the newly created cart
-     */
-    content: PickupCartRequest;
-  }
-
-  /**
-   * Parameters for cartPostItem
-   */
-  export interface CartPostItemParams {
+  export interface CartAddItemParams {
 
     /**
      * Cart identifier.
@@ -572,9 +508,9 @@ module CartService {
   }
 
   /**
-   * Parameters for cartPutItem
+   * Parameters for cartUpdateItem
    */
-  export interface CartPutItemParams {
+  export interface CartUpdateItemParams {
 
     /**
      * Cart identifier.
@@ -589,9 +525,9 @@ module CartService {
   }
 
   /**
-   * Parameters for cartDeleteItems
+   * Parameters for cartDeleteItem
    */
-  export interface CartDeleteItemsParams {
+  export interface CartDeleteItemParams {
 
     /**
      * Cart identifier.
@@ -610,7 +546,7 @@ module CartService {
   export interface EstimateShippingCostParams {
 
     /**
-     * Cart identifier
+     * Cart identifier.
      */
     token: string;
 

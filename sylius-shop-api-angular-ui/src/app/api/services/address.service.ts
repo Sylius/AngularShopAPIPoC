@@ -17,7 +17,7 @@ import { LoggedInCustomerAddressBookAddress } from '../models/logged-in-customer
   providedIn: 'root',
 })
 class AddressService extends __BaseService {
-  static readonly getAddressBookPath = '/address-book';
+  static readonly addressBookPath = '/address-book';
   static readonly createAddressPath = '/address-book';
   static readonly updateAddressBookPath = '/address-book/{id}';
   static readonly deleteAddressPath = '/address-book/{id}';
@@ -33,7 +33,7 @@ class AddressService extends __BaseService {
   /**
    * @return Successfully fetched Address Book
    */
-  getAddressBookResponse(): __Observable<__StrictHttpResponse<LoggedInCustomerAddressBook>> {
+  addressBookResponse(): __Observable<__StrictHttpResponse<LoggedInCustomerAddressBook>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -57,16 +57,17 @@ class AddressService extends __BaseService {
   /**
    * @return Successfully fetched Address Book
    */
-  getAddressBook(): __Observable<LoggedInCustomerAddressBook> {
-    return this.getAddressBookResponse().pipe(
+  addressBook(): __Observable<LoggedInCustomerAddressBook> {
+    return this.addressBookResponse().pipe(
       __map(_r => _r.body as LoggedInCustomerAddressBook)
     );
   }
 
   /**
    * @param content undefined
+   * @return Successfully created the address
    */
-  createAddressResponse(content: LoggedInCustomerAddressBookAddress): __Observable<__StrictHttpResponse<null>> {
+  createAddressResponse(content: LoggedInCustomerAddressBookAddress): __Observable<__StrictHttpResponse<LoggedInCustomerAddressBookAddress>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -84,16 +85,17 @@ class AddressService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
+        return _r as __StrictHttpResponse<LoggedInCustomerAddressBookAddress>;
       })
     );
   }
   /**
    * @param content undefined
+   * @return Successfully created the address
    */
-  createAddress(content: LoggedInCustomerAddressBookAddress): __Observable<null> {
+  createAddress(content: LoggedInCustomerAddressBookAddress): __Observable<LoggedInCustomerAddressBookAddress> {
     return this.createAddressResponse(content).pipe(
-      __map(_r => _r.body as null)
+      __map(_r => _r.body as LoggedInCustomerAddressBookAddress)
     );
   }
 

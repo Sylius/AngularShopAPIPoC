@@ -11,6 +11,7 @@ import { ProductsPage } from '../models/products-page';
 import { ProductDetails } from '../models/product-details';
 import { ProductReviewsPage } from '../models/product-reviews-page';
 import { AddReviewRequest } from '../models/add-review-request';
+import { Product } from '../models/product';
 
 /**
  * Show product catalog and add product reviews.
@@ -19,14 +20,15 @@ import { AddReviewRequest } from '../models/add-review-request';
   providedIn: 'root',
 })
 class ProductsService extends __BaseService {
-  static readonly productCatalogTaxonBySlugPath = '/taxon-products-by-slug/{slug}';
-  static readonly productCatalogTaxonByCodePath = '/taxon-products/{code}';
-  static readonly productDetailsBySlugPath = '/products-by-slug/{slug}';
-  static readonly productDetailsByCodePath = '/products/{code}';
-  static readonly productReviewsBySlugPath = '/product-reviews-by-slug/{slug}';
-  static readonly productAddReviewByslugPath = '/product-reviews-by-slug/{slug}';
-  static readonly productReviewsByCodePath = '/product/{code}/reviews';
-  static readonly productAddReviewByCodePath = '/product/{code}/reviews';
+  static readonly productCatalogBySlugPath = '/taxon-products/by-slug/{taxonSlug}';
+  static readonly productCatalogPath = '/taxon-products/by-code/{taxonCode}';
+  static readonly productDetailsBySlugPath = '/products/by-slug/{slug}';
+  static readonly productDetailsPath = '/products/by-code/{code}';
+  static readonly productReviewsBySlugPath = '/products/by-slug/{slug}/reviews';
+  static readonly productAddReviewBySlugPath = '/products/by-slug/{slug}/reviews';
+  static readonly productReviewsPath = '/products/by-code/{code}/reviews';
+  static readonly productAddReviewPath = '/products/by-code/{code}/reviews';
+  static readonly latestProductsPath = '/product-latest';
 
   constructor(
     config: __Configuration,
@@ -37,11 +39,9 @@ class ProductsService extends __BaseService {
 
   /**
    * This endpoint will return a paginated list of products for given taxon.
-   * @param params The `ProductsService.ProductCatalogTaxonBySlugParams` containing the following parameters:
+   * @param params The `ProductsService.ProductCatalogBySlugParams` containing the following parameters:
    *
-   * - `slug`: Slug of taxonomy for which products should be listed.
-   *
-   * - `channel`: Channel from which products should be gathered.
+   * - `taxonSlug`: Slug of taxonomy for which products should be listed.
    *
    * - `locale`: Locale in which products should be shown.
    *
@@ -51,18 +51,17 @@ class ProductsService extends __BaseService {
    *
    * @return Paginated product list.
    */
-  productCatalogTaxonBySlugResponse(params: ProductsService.ProductCatalogTaxonBySlugParams): __Observable<__StrictHttpResponse<ProductsPage>> {
+  productCatalogBySlugResponse(params: ProductsService.ProductCatalogBySlugParams): __Observable<__StrictHttpResponse<ProductsPage>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (params.channel != null) __params = __params.set('channel', params.channel.toString());
     if (params.locale != null) __params = __params.set('locale', params.locale.toString());
     if (params.limit != null) __params = __params.set('limit', params.limit.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/taxon-products/by-slug/${params.slug}`,
+      this.rootUrl + `/taxon-products/by-slug/${params.taxonSlug}`,
       __body,
       {
         headers: __headers,
@@ -79,11 +78,9 @@ class ProductsService extends __BaseService {
   }
   /**
    * This endpoint will return a paginated list of products for given taxon.
-   * @param params The `ProductsService.ProductCatalogTaxonBySlugParams` containing the following parameters:
+   * @param params The `ProductsService.ProductCatalogBySlugParams` containing the following parameters:
    *
-   * - `slug`: Slug of taxonomy for which products should be listed.
-   *
-   * - `channel`: Channel from which products should be gathered.
+   * - `taxonSlug`: Slug of taxonomy for which products should be listed.
    *
    * - `locale`: Locale in which products should be shown.
    *
@@ -93,19 +90,17 @@ class ProductsService extends __BaseService {
    *
    * @return Paginated product list.
    */
-  productCatalogTaxonBySlug(params: ProductsService.ProductCatalogTaxonBySlugParams): __Observable<ProductsPage> {
-    return this.productCatalogTaxonBySlugResponse(params).pipe(
+  productCatalogBySlug(params: ProductsService.ProductCatalogBySlugParams): __Observable<ProductsPage> {
+    return this.productCatalogBySlugResponse(params).pipe(
       __map(_r => _r.body as ProductsPage)
     );
   }
 
   /**
    * This endpoint will return a paginated list of products for given taxon.
-   * @param params The `ProductsService.ProductCatalogTaxonByCodeParams` containing the following parameters:
+   * @param params The `ProductsService.ProductCatalogParams` containing the following parameters:
    *
-   * - `code`: Code of taxonomy for which products should be listed.
-   *
-   * - `channel`: Channel code from which products should be gathered.
+   * - `taxonCode`: Code of taxonomy for which products should be listed.
    *
    * - `locale`: Locale in which products should be shown.
    *
@@ -115,18 +110,17 @@ class ProductsService extends __BaseService {
    *
    * @return Paginated product list.
    */
-  productCatalogTaxonByCodeResponse(params: ProductsService.ProductCatalogTaxonByCodeParams): __Observable<__StrictHttpResponse<ProductsPage>> {
+  productCatalogResponse(params: ProductsService.ProductCatalogParams): __Observable<__StrictHttpResponse<ProductsPage>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (params.channel != null) __params = __params.set('channel', params.channel.toString());
     if (params.locale != null) __params = __params.set('locale', params.locale.toString());
     if (params.limit != null) __params = __params.set('limit', params.limit.toString());
     if (params.page != null) __params = __params.set('page', params.page.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/taxon-products/${params.code}`,
+      this.rootUrl + `/taxon-products/by-code/${params.taxonCode}`,
       __body,
       {
         headers: __headers,
@@ -143,11 +137,9 @@ class ProductsService extends __BaseService {
   }
   /**
    * This endpoint will return a paginated list of products for given taxon.
-   * @param params The `ProductsService.ProductCatalogTaxonByCodeParams` containing the following parameters:
+   * @param params The `ProductsService.ProductCatalogParams` containing the following parameters:
    *
-   * - `code`: Code of taxonomy for which products should be listed.
-   *
-   * - `channel`: Channel code from which products should be gathered.
+   * - `taxonCode`: Code of taxonomy for which products should be listed.
    *
    * - `locale`: Locale in which products should be shown.
    *
@@ -157,8 +149,8 @@ class ProductsService extends __BaseService {
    *
    * @return Paginated product list.
    */
-  productCatalogTaxonByCode(params: ProductsService.ProductCatalogTaxonByCodeParams): __Observable<ProductsPage> {
-    return this.productCatalogTaxonByCodeResponse(params).pipe(
+  productCatalog(params: ProductsService.ProductCatalogParams): __Observable<ProductsPage> {
+    return this.productCatalogResponse(params).pipe(
       __map(_r => _r.body as ProductsPage)
     );
   }
@@ -169,22 +161,19 @@ class ProductsService extends __BaseService {
    *
    * - `slug`: Slug of expected product.
    *
-   * - `channel`: Channel from which products should be gathered.
-   *
    * - `locale`: Locale in which products should be shown.
    *
-   * @return Product details returned
+   * @return Show a product with the given slug.
    */
   productDetailsBySlugResponse(params: ProductsService.ProductDetailsBySlugParams): __Observable<__StrictHttpResponse<ProductDetails>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (params.channel != null) __params = __params.set('channel', params.channel.toString());
     if (params.locale != null) __params = __params.set('locale', params.locale.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/products-by-slug/${params.slug}`,
+      this.rootUrl + `/products/by-slug/${params.slug}`,
       __body,
       {
         headers: __headers,
@@ -205,11 +194,9 @@ class ProductsService extends __BaseService {
    *
    * - `slug`: Slug of expected product.
    *
-   * - `channel`: Channel from which products should be gathered.
-   *
    * - `locale`: Locale in which products should be shown.
    *
-   * @return Product details returned
+   * @return Show a product with the given slug.
    */
   productDetailsBySlug(params: ProductsService.ProductDetailsBySlugParams): __Observable<ProductDetails> {
     return this.productDetailsBySlugResponse(params).pipe(
@@ -219,26 +206,23 @@ class ProductsService extends __BaseService {
 
   /**
    * This endpoint will return a product with the given code.
-   * @param params The `ProductsService.ProductDetailsByCodeParams` containing the following parameters:
+   * @param params The `ProductsService.ProductDetailsParams` containing the following parameters:
    *
    * - `code`: Code of expected product.
    *
-   * - `channel`: Channel from which products should be gathered.
-   *
    * - `locale`: Locale in which products should be shown.
    *
-   * @return Product details returned
+   * @return Show a product with the given code.
    */
-  productDetailsByCodeResponse(params: ProductsService.ProductDetailsByCodeParams): __Observable<__StrictHttpResponse<ProductDetails>> {
+  productDetailsResponse(params: ProductsService.ProductDetailsParams): __Observable<__StrictHttpResponse<ProductDetails>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (params.channel != null) __params = __params.set('channel', params.channel.toString());
     if (params.locale != null) __params = __params.set('locale', params.locale.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/products/${params.code}`,
+      this.rootUrl + `/products/by-code/${params.code}`,
       __body,
       {
         headers: __headers,
@@ -255,41 +239,33 @@ class ProductsService extends __BaseService {
   }
   /**
    * This endpoint will return a product with the given code.
-   * @param params The `ProductsService.ProductDetailsByCodeParams` containing the following parameters:
+   * @param params The `ProductsService.ProductDetailsParams` containing the following parameters:
    *
    * - `code`: Code of expected product.
    *
-   * - `channel`: Channel from which products should be gathered.
-   *
    * - `locale`: Locale in which products should be shown.
    *
-   * @return Product details returned
+   * @return Show a product with the given code.
    */
-  productDetailsByCode(params: ProductsService.ProductDetailsByCodeParams): __Observable<ProductDetails> {
-    return this.productDetailsByCodeResponse(params).pipe(
+  productDetails(params: ProductsService.ProductDetailsParams): __Observable<ProductDetails> {
+    return this.productDetailsResponse(params).pipe(
       __map(_r => _r.body as ProductDetails)
     );
   }
 
   /**
    * This endpoint will return a paginated list of all reviews related to the product identified by slug.
-   * @param params The `ProductsService.ProductReviewsBySlugParams` containing the following parameters:
-   *
-   * - `slug`: Slug of expected product.
-   *
-   * - `channel`: Channel from which products should be gathered.
-   *
-   * @return Product reviews returned
+   * @param slug Slug of expected product.
+   * @return A paginated list of all reviews related to the product identified by slug.
    */
-  productReviewsBySlugResponse(params: ProductsService.ProductReviewsBySlugParams): __Observable<__StrictHttpResponse<ProductReviewsPage>> {
+  productReviewsBySlugResponse(slug: string): __Observable<__StrictHttpResponse<ProductReviewsPage>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (params.channel != null) __params = __params.set('channel', params.channel.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/product-reviews-by-slug/${params.slug}`,
+      this.rootUrl + `/products/by-slug/${slug}/reviews`,
       __body,
       {
         headers: __headers,
@@ -306,29 +282,24 @@ class ProductsService extends __BaseService {
   }
   /**
    * This endpoint will return a paginated list of all reviews related to the product identified by slug.
-   * @param params The `ProductsService.ProductReviewsBySlugParams` containing the following parameters:
-   *
-   * - `slug`: Slug of expected product.
-   *
-   * - `channel`: Channel from which products should be gathered.
-   *
-   * @return Product reviews returned
+   * @param slug Slug of expected product.
+   * @return A paginated list of all reviews related to the product identified by slug.
    */
-  productReviewsBySlug(params: ProductsService.ProductReviewsBySlugParams): __Observable<ProductReviewsPage> {
-    return this.productReviewsBySlugResponse(params).pipe(
+  productReviewsBySlug(slug: string): __Observable<ProductReviewsPage> {
+    return this.productReviewsBySlugResponse(slug).pipe(
       __map(_r => _r.body as ProductReviewsPage)
     );
   }
 
   /**
    * This endpoint will allow you to add a new review to the product. Remember, that it should be accepted by an administrator before it will be available in the review list.
-   * @param params The `ProductsService.ProductAddReviewByslugParams` containing the following parameters:
+   * @param params The `ProductsService.ProductAddReviewBySlugParams` containing the following parameters:
    *
    * - `slug`: Slug of expected product.
    *
    * - `content`:
    */
-  productAddReviewByslugResponse(params: ProductsService.ProductAddReviewByslugParams): __Observable<__StrictHttpResponse<null>> {
+  productAddReviewBySlugResponse(params: ProductsService.ProductAddReviewBySlugParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -336,7 +307,7 @@ class ProductsService extends __BaseService {
     __body = params.content;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/product-reviews-by-slug/${params.slug}`,
+      this.rootUrl + `/products/by-slug/${params.slug}/reviews`,
       __body,
       {
         headers: __headers,
@@ -353,37 +324,31 @@ class ProductsService extends __BaseService {
   }
   /**
    * This endpoint will allow you to add a new review to the product. Remember, that it should be accepted by an administrator before it will be available in the review list.
-   * @param params The `ProductsService.ProductAddReviewByslugParams` containing the following parameters:
+   * @param params The `ProductsService.ProductAddReviewBySlugParams` containing the following parameters:
    *
    * - `slug`: Slug of expected product.
    *
    * - `content`:
    */
-  productAddReviewByslug(params: ProductsService.ProductAddReviewByslugParams): __Observable<null> {
-    return this.productAddReviewByslugResponse(params).pipe(
+  productAddReviewBySlug(params: ProductsService.ProductAddReviewBySlugParams): __Observable<null> {
+    return this.productAddReviewBySlugResponse(params).pipe(
       __map(_r => _r.body as null)
     );
   }
 
   /**
    * This endpoint will return a paginated list of all reviews related to the product identified by slug.
-   * @param params The `ProductsService.ProductReviewsByCodeParams` containing the following parameters:
-   *
-   * - `code`: Code of expected product.
-   *
-   * - `channel`: Channel from which products should be gathered.
-   *
-   * @return Product reviews returned
+   * @param code Code of expected product.
+   * @return A paginated list of all reviews related to the product identified by slug.
    */
-  productReviewsByCodeResponse(params: ProductsService.ProductReviewsByCodeParams): __Observable<__StrictHttpResponse<ProductReviewsPage>> {
+  productReviewsResponse(code: string): __Observable<__StrictHttpResponse<ProductReviewsPage>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
-    if (params.channel != null) __params = __params.set('channel', params.channel.toString());
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/product/${params.code}/reviews`,
+      this.rootUrl + `/products/by-code/${code}/reviews`,
       __body,
       {
         headers: __headers,
@@ -400,29 +365,24 @@ class ProductsService extends __BaseService {
   }
   /**
    * This endpoint will return a paginated list of all reviews related to the product identified by slug.
-   * @param params The `ProductsService.ProductReviewsByCodeParams` containing the following parameters:
-   *
-   * - `code`: Code of expected product.
-   *
-   * - `channel`: Channel from which products should be gathered.
-   *
-   * @return Product reviews returned
+   * @param code Code of expected product.
+   * @return A paginated list of all reviews related to the product identified by slug.
    */
-  productReviewsByCode(params: ProductsService.ProductReviewsByCodeParams): __Observable<ProductReviewsPage> {
-    return this.productReviewsByCodeResponse(params).pipe(
+  productReviews(code: string): __Observable<ProductReviewsPage> {
+    return this.productReviewsResponse(code).pipe(
       __map(_r => _r.body as ProductReviewsPage)
     );
   }
 
   /**
    * This endpoint will allow you to add a new review to the product. Remember, that it should be accepted by an administrator before it will be available in the review list.
-   * @param params The `ProductsService.ProductAddReviewByCodeParams` containing the following parameters:
+   * @param params The `ProductsService.ProductAddReviewParams` containing the following parameters:
    *
    * - `code`: Code of expected product.
    *
    * - `content`:
    */
-  productAddReviewByCodeResponse(params: ProductsService.ProductAddReviewByCodeParams): __Observable<__StrictHttpResponse<null>> {
+  productAddReviewResponse(params: ProductsService.ProductAddReviewParams): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -430,7 +390,7 @@ class ProductsService extends __BaseService {
     __body = params.content;
     let req = new HttpRequest<any>(
       'POST',
-      this.rootUrl + `/product/${params.code}/reviews`,
+      this.rootUrl + `/products/by-code/${params.code}/reviews`,
       __body,
       {
         headers: __headers,
@@ -447,15 +407,64 @@ class ProductsService extends __BaseService {
   }
   /**
    * This endpoint will allow you to add a new review to the product. Remember, that it should be accepted by an administrator before it will be available in the review list.
-   * @param params The `ProductsService.ProductAddReviewByCodeParams` containing the following parameters:
+   * @param params The `ProductsService.ProductAddReviewParams` containing the following parameters:
    *
    * - `code`: Code of expected product.
    *
    * - `content`:
    */
-  productAddReviewByCode(params: ProductsService.ProductAddReviewByCodeParams): __Observable<null> {
-    return this.productAddReviewByCodeResponse(params).pipe(
+  productAddReview(params: ProductsService.ProductAddReviewParams): __Observable<null> {
+    return this.productAddReviewResponse(params).pipe(
       __map(_r => _r.body as null)
+    );
+  }
+
+  /**
+   * This endpoint will return an array of latest products.
+   * @param params The `ProductsService.LatestProductsParams` containing the following parameters:
+   *
+   * - `locale`: Locale in which products should be shown.
+   *
+   * - `limit`: Number of expected products per page.
+   *
+   * @return Array of latest products.
+   */
+  latestProductsResponse(params: ProductsService.LatestProductsParams): __Observable<__StrictHttpResponse<Array<Product>>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    if (params.locale != null) __params = __params.set('locale', params.locale.toString());
+    if (params.limit != null) __params = __params.set('limit', params.limit.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/product-latest`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<Array<Product>>;
+      })
+    );
+  }
+  /**
+   * This endpoint will return an array of latest products.
+   * @param params The `ProductsService.LatestProductsParams` containing the following parameters:
+   *
+   * - `locale`: Locale in which products should be shown.
+   *
+   * - `limit`: Number of expected products per page.
+   *
+   * @return Array of latest products.
+   */
+  latestProducts(params: ProductsService.LatestProductsParams): __Observable<Array<Product>> {
+    return this.latestProductsResponse(params).pipe(
+      __map(_r => _r.body as Array<Product>)
     );
   }
 }
@@ -463,19 +472,14 @@ class ProductsService extends __BaseService {
 module ProductsService {
 
   /**
-   * Parameters for productCatalogTaxonBySlug
+   * Parameters for productCatalogBySlug
    */
-  export interface ProductCatalogTaxonBySlugParams {
+  export interface ProductCatalogBySlugParams {
 
     /**
      * Slug of taxonomy for which products should be listed.
      */
-    slug: string;
-
-    /**
-     * Channel from which products should be gathered.
-     */
-    channel: string;
+    taxonSlug: string;
 
     /**
      * Locale in which products should be shown.
@@ -494,19 +498,14 @@ module ProductsService {
   }
 
   /**
-   * Parameters for productCatalogTaxonByCode
+   * Parameters for productCatalog
    */
-  export interface ProductCatalogTaxonByCodeParams {
+  export interface ProductCatalogParams {
 
     /**
      * Code of taxonomy for which products should be listed.
      */
-    code: string;
-
-    /**
-     * Channel code from which products should be gathered.
-     */
-    channel: string;
+    taxonCode: string;
 
     /**
      * Locale in which products should be shown.
@@ -535,20 +534,15 @@ module ProductsService {
     slug: string;
 
     /**
-     * Channel from which products should be gathered.
-     */
-    channel: string;
-
-    /**
      * Locale in which products should be shown.
      */
     locale?: string;
   }
 
   /**
-   * Parameters for productDetailsByCode
+   * Parameters for productDetails
    */
-  export interface ProductDetailsByCodeParams {
+  export interface ProductDetailsParams {
 
     /**
      * Code of expected product.
@@ -556,36 +550,15 @@ module ProductsService {
     code: string;
 
     /**
-     * Channel from which products should be gathered.
-     */
-    channel: string;
-
-    /**
      * Locale in which products should be shown.
      */
     locale?: string;
   }
 
   /**
-   * Parameters for productReviewsBySlug
+   * Parameters for productAddReviewBySlug
    */
-  export interface ProductReviewsBySlugParams {
-
-    /**
-     * Slug of expected product.
-     */
-    slug: string;
-
-    /**
-     * Channel from which products should be gathered.
-     */
-    channel: string;
-  }
-
-  /**
-   * Parameters for productAddReviewByslug
-   */
-  export interface ProductAddReviewByslugParams {
+  export interface ProductAddReviewBySlugParams {
 
     /**
      * Slug of expected product.
@@ -595,31 +568,31 @@ module ProductsService {
   }
 
   /**
-   * Parameters for productReviewsByCode
+   * Parameters for productAddReview
    */
-  export interface ProductReviewsByCodeParams {
-
-    /**
-     * Code of expected product.
-     */
-    code: string;
-
-    /**
-     * Channel from which products should be gathered.
-     */
-    channel: string;
-  }
-
-  /**
-   * Parameters for productAddReviewByCode
-   */
-  export interface ProductAddReviewByCodeParams {
+  export interface ProductAddReviewParams {
 
     /**
      * Code of expected product.
      */
     code: string;
     content: AddReviewRequest;
+  }
+
+  /**
+   * Parameters for latestProducts
+   */
+  export interface LatestProductsParams {
+
+    /**
+     * Locale in which products should be shown.
+     */
+    locale?: string;
+
+    /**
+     * Number of expected products per page.
+     */
+    limit?: number;
   }
 }
 

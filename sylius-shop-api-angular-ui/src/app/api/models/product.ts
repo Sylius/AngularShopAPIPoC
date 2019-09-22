@@ -11,7 +11,7 @@ export interface Product {
   code?: string;
   name?: string;
   slug?: string;
-  averageRating?: number;
+  averageRating?: string;
   taxons?: ProductTaxon;
 
   /**
