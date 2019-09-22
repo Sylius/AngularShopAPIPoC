@@ -8,6 +8,7 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { Taxon } from '../models/taxon';
+import { TaxonDetails } from '../models/taxon-details';
 
 /**
  * Show taxon tree
@@ -74,7 +75,7 @@ class TaxonsService extends __BaseService {
    *
    * @return Requested taxon with children.
    */
-  taxonDetailsResponse(params: TaxonsService.TaxonDetailsParams): __Observable<__StrictHttpResponse<Taxon>> {
+  taxonDetailsResponse(params: TaxonsService.TaxonDetailsParams): __Observable<__StrictHttpResponse<TaxonDetails>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -93,7 +94,7 @@ class TaxonsService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<Taxon>;
+        return _r as __StrictHttpResponse<TaxonDetails>;
       })
     );
   }
@@ -107,9 +108,9 @@ class TaxonsService extends __BaseService {
    *
    * @return Requested taxon with children.
    */
-  taxonDetails(params: TaxonsService.TaxonDetailsParams): __Observable<Taxon> {
+  taxonDetails(params: TaxonsService.TaxonDetailsParams): __Observable<TaxonDetails> {
     return this.taxonDetailsResponse(params).pipe(
-      __map(_r => _r.body as Taxon)
+      __map(_r => _r.body as TaxonDetails)
     );
   }
 }

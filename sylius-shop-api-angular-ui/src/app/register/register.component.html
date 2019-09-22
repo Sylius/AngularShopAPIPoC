@@ -1,2 +1,6 @@
-<p>register works!</p>
-<p>sdfds</p>
+<input #username>
+<input #plainPassword>
+<input #firstName>
+<input #lastName>
+
+<button (click)="register(username.value, plainPassword.value, firstName.value, lastName.value)">Login</button>

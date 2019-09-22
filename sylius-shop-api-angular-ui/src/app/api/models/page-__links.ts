@@ -4,7 +4,7 @@ export interface Page__links {
   /**
    * Link to the current page.
    */
-  self?: number;
+  self?: string;
 
   /**
    * Link to the fist page.

@@ -7,6 +7,7 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../strict-http-respo
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
+import { PlacedOrder } from '../models/placed-order';
 
 /**
  * Showing the order information
@@ -15,8 +16,8 @@ import { map as __map, filter as __filter } from 'rxjs/operators';
   providedIn: 'root',
 })
 class OrderService extends __BaseService {
-  static readonly showsOrderIdPath = '/orders';
-  static readonly getOrderByIdPath = '/orders/{id}';
+  static readonly ordersPath = '/orders';
+  static readonly orderPath = '/orders/{tokenValue}';
 
   constructor(
     config: __Configuration,
@@ -24,10 +25,16 @@ class OrderService extends __BaseService {
   ) {
     super(config, http);
   }
-  showsOrderIdResponse(): __Observable<__StrictHttpResponse<null>> {
+
+  /**
+   * @param channelCode The request channel code
+   * @return Shows a list of placed orders of the customer
+   */
+  ordersResponse(channelCode: string): __Observable<__StrictHttpResponse<Array<PlacedOrder>>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/orders`,
@@ -41,26 +48,38 @@ class OrderService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
+        return _r as __StrictHttpResponse<Array<PlacedOrder>>;
       })
     );
-  }  showsOrderId(): __Observable<null> {
-    return this.showsOrderIdResponse().pipe(
-      __map(_r => _r.body as null)
+  }
+  /**
+   * @param channelCode The request channel code
+   * @return Shows a list of placed orders of the customer
+   */
+  orders(channelCode: string): __Observable<Array<PlacedOrder>> {
+    return this.ordersResponse(channelCode).pipe(
+      __map(_r => _r.body as Array<PlacedOrder>)
     );
   }
 
   /**
-   * @param id ID of expected order.
+   * @param params The `OrderService.OrderParams` containing the following parameters:
+   *
+   * - `channelCode`: The request channel code
+   *
+   * - `tokenValue`: Order token.
+   *
+   * @return Shows details of specific customer's order with given tokenValue
    */
-  getOrderByIdResponse(id: string): __Observable<__StrictHttpResponse<null>> {
+  orderResponse(params: OrderService.OrderParams): __Observable<__StrictHttpResponse<PlacedOrder>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
+
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/orders/${id}`,
+      this.rootUrl + `/orders/${params.tokenValue}`,
       __body,
       {
         headers: __headers,
@@ -71,21 +90,43 @@ class OrderService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
+        return _r as __StrictHttpResponse<PlacedOrder>;
       })
     );
   }
   /**
-   * @param id ID of expected order.
+   * @param params The `OrderService.OrderParams` containing the following parameters:
+   *
+   * - `channelCode`: The request channel code
+   *
+   * - `tokenValue`: Order token.
+   *
+   * @return Shows details of specific customer's order with given tokenValue
    */
-  getOrderById(id: string): __Observable<null> {
-    return this.getOrderByIdResponse(id).pipe(
-      __map(_r => _r.body as null)
+  order(params: OrderService.OrderParams): __Observable<PlacedOrder> {
+    return this.orderResponse(params).pipe(
+      __map(_r => _r.body as PlacedOrder)
     );
   }
 }
 
 module OrderService {
+
+  /**
+   * Parameters for order
+   */
+  export interface OrderParams {
+
+    /**
+     * The request channel code
+     */
+    channelCode: string;
+
+    /**
+     * Order token.
+     */
+    tokenValue: string;
+  }
 }
 
 export { OrderService }

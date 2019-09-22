@@ -2,11 +2,11 @@
 import { Product } from './product';
 
 /**
- * Cart item with calculated prices, quantity and related product.
+ * Item with calculated prices, quantity and related product.
  */
-export interface CartItem {
+export interface Item {
   id?: number;
   quantity?: number;
-  total?: {};
+  total?: number;
   product?: Product;
 }

@@ -24,9 +24,9 @@ import { CheckoutCompleteRequest } from '../models/checkout-complete-request';
 class CheckoutService extends __BaseService {
   static readonly checkoutSummarizePath = '/checkout/{token}';
   static readonly checkoutAddressPath = '/checkout/{token}/address';
-  static readonly checkoutShowAvailableShippingMethodsPath = '/checkout/{token}/shipping/';
+  static readonly checkoutShowAvailableShippingMethodsPath = '/checkout/{token}/shipping';
   static readonly checkoutChooseShippingMethodPath = '/checkout/{token}/shipping/{id}';
-  static readonly checkoutShowAvailablePaymentMethodsPath = '/checkout/{token}/payment/';
+  static readonly checkoutShowAvailablePaymentMethodsPath = '/checkout/{token}/payment';
   static readonly checkoutChoosePaymentMethodPath = '/checkout/{token}/payment/{id}';
   static readonly checkoutCompletePath = '/checkout/{token}/complete';
 
@@ -123,7 +123,7 @@ class CheckoutService extends __BaseService {
   /**
    * This endpoint will show you available shipping methods for all cart shipments.
    * @param token Cart identifier.
-   * @return Shipping methods returned
+   * @return Get available shipping methods.
    */
   checkoutShowAvailableShippingMethodsResponse(token: string): __Observable<__StrictHttpResponse<AvailableShippingMethods>> {
     let __params = this.newParams();
@@ -132,7 +132,7 @@ class CheckoutService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/checkout/${token}/shipping/`,
+      this.rootUrl + `/checkout/${token}/shipping`,
       __body,
       {
         headers: __headers,
@@ -150,7 +150,7 @@ class CheckoutService extends __BaseService {
   /**
    * This endpoint will show you available shipping methods for all cart shipments.
    * @param token Cart identifier.
-   * @return Shipping methods returned
+   * @return Get available shipping methods.
    */
   checkoutShowAvailableShippingMethods(token: string): __Observable<AvailableShippingMethods> {
     return this.checkoutShowAvailableShippingMethodsResponse(token).pipe(
@@ -211,7 +211,7 @@ class CheckoutService extends __BaseService {
   /**
    * This endpoint will show you available payment methods for all cart payments.
    * @param token Cart identifier.
-   * @return Payment methods returned
+   * @return Get available payment methods.
    */
   checkoutShowAvailablePaymentMethodsResponse(token: string): __Observable<__StrictHttpResponse<AvailablePaymentMethods>> {
     let __params = this.newParams();
@@ -220,7 +220,7 @@ class CheckoutService extends __BaseService {
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/checkout/${token}/payment/`,
+      this.rootUrl + `/checkout/${token}/payment`,
       __body,
       {
         headers: __headers,
@@ -238,7 +238,7 @@ class CheckoutService extends __BaseService {
   /**
    * This endpoint will show you available payment methods for all cart payments.
    * @param token Cart identifier.
-   * @return Payment methods returned
+   * @return Get available payment methods.
    */
   checkoutShowAvailablePaymentMethods(token: string): __Observable<AvailablePaymentMethods> {
     return this.checkoutShowAvailablePaymentMethodsResponse(token).pipe(

@@ -7,4 +7,6 @@ export interface Address {
   city?: string;
   postcode?: string;
   provinceName?: string;
+  company?: string;
+  phoneNumber?: string;
 }
